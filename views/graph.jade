@@ -1,0 +1,205 @@
+extends layout
+q
+
+block content
+	link(rel="stylesheet", href="/css/search.css")
+	
+	script.
+		$(function(){
+			document.getElementById("query_input").value="#{query}";
+			$('#search_btn').click(search);
+			$('#graph_btn').click(makeGraph);
+			$('#query_input').keypress(function(event){
+				if(event.which == 13 || event.keyCode == 13){
+					search();
+					return false;
+				}
+			});
+
+			$(".header_logo").click(function(){
+				window.location.href="/";
+			});
+			$("#adv_search_toggle_btn").click(toggle_advSearch);
+			$("#adv_search_btn").click(advSearch);
+			$("#adv_graph_toggle_btn").click(toggle_advGraph);
+			$("#adv_graph_btn").click(advGraph);
+		});
+
+		function search(){
+			var query = document.getElementById("query_input").value;
+			if(!query){
+				query = $("#query_input").attr('placeholder');
+			}
+			window.location.href = "search?q=" + query + "&p=1";
+		}
+
+		function makeGraph(){
+			var query = document.getElementById("query_input").value;
+			if(!query){
+				query = $("#query_input").attr('placeholder');
+			}
+			window.location.href = "graph?q=" + query;
+		}
+
+		function toggle_advSearch(){
+			var btnDiv = document.getElementById("adv_search_toggle_btn");
+			if(btnDiv.classList.contains("opened")){
+				$(".adv_input_container").slideUp(function(){
+					btnDiv.classList.remove("opened");
+					$("#search_btn").click(search);
+				});
+			}else{
+				$(".adv_input_container").slideDown(function(){
+					btnDiv.classList.add("opened");
+				});
+			}
+		}
+
+		function toggle_advGraph(){
+			var btnDiv = document.getElementById("adv_graph_toggle_btn");
+			if(btnDiv.classList.contains("opened")){
+				$(".adv_graph_container").slideUp(function(){
+					btnDiv.classList.remove("opened");
+					$("#graph_btn").click(makeGraph);
+				});
+			}else{
+				$(".adv_graph_container").slideDown(function(){
+					btnDiv.classList.add("opened");
+				});
+			}
+		}
+		
+		function advSearch(){
+			var mut_query = document.getElementById("adv_mut_input").value;
+			if(!mut_query)
+				mut_query = "null";
+			var gene_query = document.getElementById("adv_gene_input").value;
+			if(!gene_query)
+				gene_query = "null";
+			var drug_query = document.getElementById("adv_drug_input").value;
+			if(!drug_query)
+				drug_query = "null";
+			var pmid_query = document.getElementById("adv_pmid_input").value;
+			if(!pmid_query)
+				pmid_query = "null";
+			var disease_query = document.getElementById("adv_disease_input").value;
+			if(!disease_query)
+				disease_query = "null";
+			if(mut_query == "null" && gene_query=="null" && drug_query=="null" && pmid_query=="null" && disease_query=="null"){
+				console.log("No input");
+			}else{
+				window.location.href="advSearch?m=" + mut_query + "&g=" + gene_query + "&d=" + drug_query + "&pm="+pmid_query+"&di="+disease_query;
+			}
+		}
+		
+		function advGraph(){
+			var first_query = document.getElementById("adv_graph_first").value;
+			if(!first_query){
+				first_query = "null";
+			}
+			var second_query = document.getElementById("adv_graph_second").value;
+			if(!second_query){
+				second_query = "null";
+			}
+			if(first_query == "null" || second_query=="null"){
+				console.log("No input");
+			}else{
+				window.location.href="advGraph?f=" + first_query + "&s=" + second_query;
+			}
+		}
+
+	div.container
+		div.header
+			div.header_logo="VarDrugPub_v2"
+				span=" : Variant-Gene-Drug Relations Database the Second"
+			img(class="logo", src="globalsymbol_eng2_large.gif")
+
+		div.contents_box
+			div.content
+				div.input_container
+					div.input_box
+						div.input_textbox
+							input#query_input.form-control(type="text")
+						div.input_btn
+							a#search_btn.btn.btn-default="search"
+							a#adv_search_toggle_btn.btn.btn-lg.btn-default
+								img(src="ic_arrow_drop_down_black_48dp_1x.png")
+						div.input_btn
+							a#graph_btn.btn.btn-default="Graph"
+							a#adv_graph_toggle_btn.btn.btn-lg.btn-default
+								img(src="ic_arrow_drop_down_black_48dp_1x.png")
+						div.adv_input_container
+							div.adv_input_box
+								div.adv_input_header="Advanced search"
+								div.adv_inputs
+									div.adv_inputs_header="Mutation"
+									input#adv_mut_input.form-control(type="text")
+								div.adv_inputs
+									div.adv_inputs_header="Gene"
+									input#adv_gene_input.form-control(type="text")
+								div.adv_inputs
+									div.adv_inputs_header="Drug"
+									input#adv_drug_input.form-control(type="text")
+								div.adv_inputs
+									div.adv_inputs_header="PMID"
+									input#adv_pmid_input.form-control(type="text")
+								div.adv_inputs
+									div.adv_inputs_header="Disease"
+									input#adv_disease_input.form-control(type="text")
+								div.adv_input_btn
+									a#adv_search_btn.btn.btn-lg.btn-default="Advanced search"
+						div.adv_graph_container
+							div.adv_graph_box
+								div.adv_input_header="Advanced graph search"
+								div.adv_inputs
+									div.adv_inputs_header="First"
+									input#adv_graph_first.form-control(type="text")
+								div.adv_inputs
+									div.adv_inputs_header="Second"
+									input#adv_graph_second.form-control(type="text")
+								div.adv_graph_btn
+									a#adv_graph_btn.btn.btn-lg.btn-default="Advanced Graph"
+				img(src="legend.png" height="48" width="800")
+				div#result4graph
+					div#graph_container
+				//div#page_nums
+				//	if (firstPage !== 'Nope')
+				//		div.page.firstPage=firstPage
+				//		div.pageblank="..."
+				//	each page in pageToShow
+				//		if (page === curPage)
+				//			div.page.currentpage=page
+				//		else
+				//			div.page=page
+				//	if (lastPage !== 'Nope')
+				//		div.pageblank="..."
+				//		div.page.lastPage=lastPage
+
+	script.
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-74880834-7', 'auto');
+		ga('send', 'pageview');
+		ga('send', 'event', 'Search', 'search', "#{query}");
+        
+		results=!{JSON.stringify(results)};
+		var cy = cytoscape({
+		container: document.getElementById('graph_container'),
+		//layout: {name: 'cose-bilkent'},
+		style:[{selector: 'node',style: {'background-image': 'data(backImage)','content':'data(name)','color': 'white','text-outline-width': 2,'text-outline-color': '#888'}},
+		{selector: ':parent',style: {'background-opacity': 0.333}},
+		{selector: "node.cy-expand-collapse-collapsed-node",style: {"background-color": "darkblue","shape": "rectangle"}},
+		{selector: 'edge',style: {'width': 3,'line-color': '#ad1a66'}},
+		{selector: 'edge.meta',style: {'width': 2,'line-color': 'red'}},
+		{selector: ':selected',style: {"border-width": 3,"border-color": '#DAA520'}}],
+		elements:results,
+		minZoom: 0.5, maxZoom: 3,});
+		var api = cy.expandCollapse({layoutBy: {name: "cose-bilkent",randomize: true,nodeRepulsion:7000,idealEdgeLength: 100},fisheye: false,animate: false,undoable: false});
+		api.collapseAll();
+		cy.on('taphold','node',function(){try {window.open( this.data('href') );} catch(e){window.location.href = this.data('href');}});
+		var canvas0 = document.querySelector('canvas[data-id="layer0-selectbox"]').style.left=0;
+		var canvas1 = document.querySelector('canvas[data-id="layer1-drag"]').style.left=0;
+		var canvas2 = document.querySelector('canvas[data-id="layer2-node"]').style.left=0;
+		
