@@ -13,7 +13,7 @@ require(bootstrap_path)(app, config);
 // set app service port
 app.set('port', process.env.PORT || config.port);
 
-server.listen(app.get('port'), '163.152.163.164', function(){
+server.listen(app.get('port'), function(){
   console.log('# Server Booting success!'.red);
 });
 
