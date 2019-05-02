@@ -1,4 +1,4 @@
-var backendIpAdress = 'http://58.142.170.7';//163.87
+var backendIpAdress = 'http://121.100.89.29';//163.87
 
 var request = require('request');
 
